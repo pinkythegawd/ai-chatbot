@@ -1,7 +1,7 @@
-# MikePinku's AI Chatbot Website
+# pinkythegawd's AI Chatbot Website
 ================================
 
-[![Logo](./logo.png)](https://mikepinku.github.io/AI-Chatbot-website/)
+[![Logo](./logo.png)](https://pinkythegawd.github.io/AI-Chatbot-website/)
 
 **Converse with AI characters you create!**
 
@@ -54,13 +54,13 @@
 ## Support
 -------
 
-If you encounter any bugs, have suggestions, or need help, feel free to open an issue or contact MikePinku at your earliest convenience.
+If you encounter any bugs, have suggestions, or need help, feel free to open an issue or contact pinkythegawd at your earliest convenience.
 
 ## About
 -----
 
-**This website has been developed by MikePinku and his incredible AI powers.**
+**This website has been developed by pinkythegawd and his incredible AI powers.**
 
-[![MikePinku](./mikepinku.jpg)](https://github.com/mikepinku)
+[![pinkythegawd](./pinkythegawd.jpg)](https://github.com/pinkythegawd)
 
-**Made with ❤️ by MikePinku**
+**Made with ❤️ by pinkythegawd**
