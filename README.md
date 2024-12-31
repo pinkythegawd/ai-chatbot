@@ -1,7 +1,7 @@
 # MikePinku's AI Chatbot Website
 ================================
 
-[![Logo](./logo.png)](https://pinkythegawd.github.io/AI-Chatbot-website/)
+[![Logo](./logo.png)](https://pinkythegawd.github.io/ai-chatbot/)
 
 **Converse with AI characters you create!**
 
@@ -39,7 +39,7 @@
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/your-username/AI-Chatbot-website
+   git clone https://github.com/pinkythegawd/ai-chatbot
    ```
 
 2. Install the dependancies:
