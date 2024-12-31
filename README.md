@@ -61,6 +61,6 @@ If you encounter any bugs, have suggestions, or need help, feel free to open an 
 
 **This website has been developed by MikePinku and his incredible AI powers.**
 
-[![pinkythegawd](./pinkythegawd.jpg)](https://github.com/pinkythegawd)
+[![pinkythegawd](./pinkythegawd.jpg)](https://github.com/pinkythegawd/pinkythegawd)
 
 **Made with ❤️ by MikePinku**
