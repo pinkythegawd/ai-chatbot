@@ -53,7 +53,9 @@
 ## Support
 -------
 
-If you encounter any bugs, have suggestions, or need help, feel free to open an issue or contact MikePinku at your earliest convenience. The AI is still in Development, so please consider supporting the project.
+If you encounter any bugs, have suggestions, or need help, feel free to open an issue or contact MikePinku at your earliest convenience. 
+
+The AI is still in Development, so please consider supporting the project.
 
 ## About
 -----
