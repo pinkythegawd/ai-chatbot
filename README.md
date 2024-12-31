@@ -1,5 +1,4 @@
 # MikePinku's AI Chatbot Website
-================================
 
 <img src="https://raw.githubusercontent.com/pinkythegawd/pinkythegawd/refs/heads/main/logo.jpg" style="width: 50%">
 
