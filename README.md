@@ -1,7 +1,7 @@
 # MikePinku's AI Chatbot Website
 ================================
 
-<img src="https://raw.githubusercontent.com/pinkythegawd/pinkythegawd/refs/heads/main/logo.jpg" style="width: 40%">
+<img src="https://raw.githubusercontent.com/pinkythegawd/pinkythegawd/refs/heads/main/logo.jpg" style="width: 50%">
 
 **Converse with AI characters you create!**
 
