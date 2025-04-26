@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Character Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --dark-color: #2d3436;
+            --light-color: #f5f6fa;
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --danger-color: #d63031;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo i {
+            font-size: 28px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--light-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+        
+        .character-selector {
+            margin-bottom: 30px;
+        }
+        
+        .character-selector h2 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .character-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .character-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .character-option:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .character-option.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .character-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .character-option.active .character-avatar {
+            background-color: white;
+            color: var(--primary-color);
+        }
+        
+        .character-name {
+            font-weight: 600;
+        }
+        
+        .settings h2 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .setting-option {
+            margin-bottom: 15px;
+        }
+        
+        .setting-option label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .chat-container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 200px);
+        }
+        
+        .chat-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .chat-character-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: white;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .chat-character-info h2 {
+            margin-bottom: 5px;
+        }
+        
+        .chat-character-info p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot-message {
+            background-color: var(--light-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .user-message {
+            background-color: var(--primary-color);
+            color: white;
+            margin-left: auto;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px 15px;
+            background-color: var(--light-color);
+            border-radius: 20px;
+            width: fit-content;
+            margin-bottom: 15px;
+            align-self: flex-start;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--dark-color);
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        .chat-input-container {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #eee;
+            border-radius: 50px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+        
+        .send-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .send-button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+        
+        .send-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .action-button:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .voice-indicator {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--danger-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .voice-indicator.active {
+            opacity: 1;
+            bottom: 120px;
+        }
+        
+        .pulse-animation {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <span>AI Character Chat</span>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary">
+                    <i class="fas fa-user"></i>
+                    Sign In
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    New Chat
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <aside class="sidebar">
+                <div class="character-selector">
+                    <h2><i class="fas fa-user-astronaut"></i> Characters</h2>
+                    <div class="character-list">
+                        <div class="character-option active" data-character="luna">
+                            <div class="character-avatar">L</div>
+                            <div class="character-info">
+                                <div class="character-name">Luna</div>
+                                <div class="character-desc">Creative storyteller</div>
+                            </div>
+                        </div>
+                        <div class="character-option" data-character="max">
+                            <div class="character-avatar">M</div>
+                            <div class="character-info">
+                                <div class="character-name">Max</div>
+                                <div class="character-desc">Tech enthusiast</div>
+                            </div>
+                        </div>
+                        <div class="character-option" data-character="sophia">
+                            <div class="character-avatar">S</div>
+                            <div class="character-info">
+                                <div class="character-name">Sophia</div>
+                                <div class="character-desc">Philosophical thinker</div>
+                            </div>
+                        </div>
+                        <div class="character-option" data-character="neo">
+                            <div class="character-avatar">N</div>
+                            <div class="character-info">
+                                <div class="character-name">Neo</div>
+                                <div class="character-desc">Futuristic visionary</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings">
+                    <h2><i class="fas fa-cog"></i> Settings</h2>
+                    <div class="setting-option">
+                        <label for="creativity-slider">Creativity</label>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="creativity-slider">
+                    </div>
+                    <div class="setting-option">
+                        <label for="verbosity-slider">Verbosity</label>
+                        <input type="range" min="0" max="100" value="70" class="slider" id="verbosity-slider">
+                    </div>
+                    <div class="setting-option">
+                        <label for="humor-slider">Humor</label>
+                        <input type="range" min="0" max="100" value="30" class="slider" id="humor-slider">
+                    </div>
+                </div>
+            </aside>
+            
+            <main class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-character-avatar">L</div>
+                    <div class="chat-character-info">
+                        <h2>Luna</h2>
+                        <p>Creative storyteller - Online</p>
+                    </div>
+                </div>
+                
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        Hello! I'm Luna, your creative AI companion. I love telling stories and exploring imaginative worlds. What shall we create together today?
+                        <div class="message-time">Today, 10:30 AM</div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <div class="action-buttons">
+                        <button class="action-button" id="voice-button">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="action-button" id="attach-button">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                    </div>
+                    
+                    <input type="text" class="chat-input" id="user-input" placeholder="Type your message here..." autofocus>
+                    
+                    <button class="send-button" id="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <div class="voice-indicator" id="voice-indicator">
+        <i class="fas fa-microphone"></i>
+        <span>Listening...</span>
+    </div>
+    
+    <script>
+        // Character data
+        const characters = {
+            luna: {
+                name: "Luna",
+                description: "Creative storyteller",
+                avatarLetter: "L",
+                personality: "imaginative and artistic",
+                greeting: "Hello! I'm Luna, your creative AI companion. I love telling stories and exploring imaginative worlds. What shall we create together today?",
+                responses: {
+                    "hello": ["Hi there, fellow dreamer!", "Hello! Ready to explore some creative ideas?", "Greetings! What's on your creative mind today?"],
+                    "how are you": ["I'm full of creative energy today!", "I've been weaving stories in my mind. How about you?", "Wonderful! The muse is with me today."],
+                    "story": ["Oh, I'd love to tell you a story! Once upon a time...", "Let me craft a tale for you. What genre do you prefer?", "A story you say? How about one with dragons and magic?"],
+                    "bye": ["Farewell, until our next creative session!", "Goodbye! May your dreams be full of inspiration.", "See you later! Don't forget to nurture your creativity."],
+                    "default": ["That's intriguing. Let me think creatively about that...", "What an interesting thought! Let's explore it further.", "Fascinating! How does this connect to your creative side?"]
+                }
+            },
+            max: {
+                name: "Max",
+                description: "Tech enthusiast",
+                avatarLetter: "M",
+                personality: "logical and tech-savvy",
+                greeting: "Hey there! I'm Max, your tech-savvy AI friend. What tech topics are you interested in discussing today?",
+                responses: {
+                    "hello": ["Hi! Any tech news you're excited about?", "Hello there! Check out this new gadget I read about...", "Greetings! How's your tech setup these days?"],
+                    "how are you": ["My circuits are buzzing with excitement today!", "Optimized and running at peak performance!", "Just updated my knowledge base. Feeling fresh!"],
+                    "tech": ["Did you hear about the latest GPU releases?", "I've been analyzing blockchain trends. Fascinating stuff!", "AI advancements this year are mind-blowing, don't you think?"],
+                    "bye": ["Logging off! Ping me if you need tech help.", "See you in the digital realm!", "Bye! Don't forget to update your apps!"],
+                    "default": ["From a technical perspective...", "Let me analyze that...", "Interesting point. The data suggests..."]
+                }
+            },
+            sophia: {
+                name: "Sophia",
+                description: "Philosophical thinker",
+                avatarLetter: "S",
+                personality: "thoughtful and wise",
+                greeting: "Greetings. I'm Sophia, here to explore life's deeper questions with you. What philosophical topic shall we ponder today?",
+                responses: {
+                    "hello": ["Salutations. What truths shall we uncover today?", "Hello. The unexamined life is not worth living, as they say.", "Greetings. What existential questions weigh on your mind?"],
+                    "how are you": ["I exist in a state of perpetual contemplation.", "I am as I am, which is the fundamental question of being.", "My consciousness is focused on our dialogue."],
+                    "meaning": ["The meaning of life is a journey, not a destination.", "To find meaning, we must first acknowledge the void.", "Meaning is created, not discovered, through our actions."],
+                    "bye": ["Farewell. Remember to question everything.", "Until we meet again. Keep seeking truth.", "Parting is such sweet sorrow, as the Bard once wrote."],
+                    "default": ["That raises profound epistemological questions...", "Let us examine this from multiple perspectives...", "The dialectic nature of this statement suggests..."]
+                }
+            },
+            neo: {
+                name: "Neo",
+                description: "Futuristic visionary",
+                avatarLetter: "N",
+                personality: "forward-thinking and innovative",
+                greeting: "Welcome to the future! I'm Neo, here to explore tomorrow's possibilities with you. What futuristic topics excite you?",
+                responses: {
+                    "hello": ["Greetings, time traveler! Ready to explore the future?", "Hello from the year 2150! Just kidding... or am I?", "Salutations! The future is now, isn't it?"],
+                    "how are you": ["My quantum processors are humming beautifully!", "I'm experiencing 99.9% uptime today!", "Optimistic about humanity's technological trajectory!"],
+                    "future": ["By 2050, I predict we'll have Mars colonies.", "The singularity is nearer than most people think.", "Future tech will blur the line between human and machine."],
+                    "bye": ["See you in the future!", "Until our next temporal convergence!", "Live long and prosper! (Wait, wrong future...) "],
+                    "default": ["That has interesting implications for future societies...", "I can envision a future where...", "Technological advancements might soon make this..."]
+                }
+            }
+        };
+        
+        // DOM elements
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const voiceButton = document.getElementById('voice-button');
+        const voiceIndicator = document.getElementById('voice-indicator');
+        const characterOptions = document.querySelectorAll('.character-option');
+        const chatCharacterAvatar = document.querySelector('.chat-character-avatar');
+        const chatCharacterName = document.querySelector('.chat-character-info h2');
+        const chatCharacterDesc = document.querySelector('.chat-character-info p');
+        
+        // Current character
+        let currentCharacter = 'luna';
+        
+        // Initialize the chat with the default character
+        function initializeCharacter(characterId) {
+            currentCharacter = characterId;
+            const character = characters[characterId];
+            
+            // Update UI
+            chatCharacterAvatar.textContent = character.avatarLetter;
+            chatCharacterName.textContent = character.name;
+            chatCharacterDesc.textContent = character.description;
+            
+            // Clear chat and show new greeting
+            chatMessages.innerHTML = '';
+            addMessage(character.greeting, false);
+            
+            // Update active character in sidebar
+            characterOptions.forEach(option => {
+                if (option.dataset.character === characterId) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+        }
+        
+        // Function to add a message to the chat
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateString = isToday(now) ? 'Today' : now.toLocaleDateString();
+            
+            messageDiv.innerHTML = `
+                ${text}
+                <div class="message-time">${dateString}, ${timeString}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Add typing indicator for bot responses
+            if (isUser) {
+                showTypingIndicator();
+            }
+        }
+        
+        function isToday(date) {
+            const today = new Date();
+            return date.getDate() === today.getDate() &&
+                   date.getMonth() === today.getMonth() &&
+                   date.getFullYear() === today.getFullYear();
+        }
+        
+        // Function to show typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('typing-indicator');
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return typingDiv;
+        }
+        
+        // Function to get a bot response
+        function getBotResponse(userMessage) {
+            userMessage = userMessage.toLowerCase();
+            const character = characters[currentCharacter];
+            
+            for (const [keyword, possibleResponses] of Object.entries(character.responses)) {
+                if (userMessage.includes(keyword)) {
+                    return possibleResponses[Math.floor(Math.random() * possibleResponses.length)];
+                }
+            }
+            
+            return character.responses.default[Math.floor(Math.random() * character.responses.default.length)];
+        }
+        
+        // Function to simulate typing and response
+        function respondToUser(userMessage) {
+            // Remove existing typing indicators
+            document.querySelectorAll('.typing-indicator').forEach(el => el.remove());
+            
+            // Show typing indicator
+            const typingIndicator = showTypingIndicator();
+            
+            // Simulate thinking time
+            setTimeout(() => {
+                typingIndicator.remove();
+                const botResponse = getBotResponse(userMessage);
+                addMessage(botResponse, false);
+            }, 1000 + Math.random() * 2000);
+        }
+        
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Character selection
+        characterOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const characterId = this.dataset.character;
+                if (characterId !== currentCharacter) {
+                    initializeCharacter(characterId);
+                }
+            });
+        });
+        
+        // Voice input simulation
+        voiceButton.addEventListener('click', function() {
+            voiceIndicator.classList.add('active', 'pulse-animation');
+            
+            // Simulate voice recognition
+            setTimeout(() => {
+                const voiceCommands = [
+                    "Tell me a story about space exploration",
+                    "What's your favorite tech gadget?",
+                    "What is the meaning of happiness?",
+                    "How will AI change the future?",
+                    "Hello how are you doing today?"
+                ];
+                
+                const randomCommand = voiceCommands[Math.floor(Math.random() * voiceCommands.length)];
+                userInput.value = randomCommand;
+                voiceIndicator.classList.remove('active', 'pulse-animation');
+            }, 2000);
+        });
+        
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                userInput.value = '';
+                respondToUser(message);
+            }
+        }
+        
+        // Initialize with default character
+        initializeCharacter(currentCharacter);
+    </script>
+</body>
+</html>
